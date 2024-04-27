@@ -161,6 +161,20 @@ class REGUIApp(ttk.Frame):  # 创建一个基于ttk.Frame的类
         # 绑定下拉菜单的选择事件，当选择改变时清除当前选择
         self.comboModel.bind('<<ComboboxSelected>>', lambda e: e.widget.select_clear())
 
+        # 创建预览标签
+        self.labelPreview = ttk.Label(self.frameModel, text='预览')
+        self.labelPreview.pack(side=tk.LEFT, padx=10, pady=5)
+
+        # 创建一个用于显示图片的Frame
+        self.imageDisplayFrame = ttk.Frame(self.frameModel, width=150, height=150)  # 根据需要设置宽度和高度
+        self.imageDisplayFrame.pack(side=tk.RIGHT, padx=10, pady=5, fill=tk.BOTH, expand=True)      #紧贴上一个frame,更美观 算了不折腾了 pack和gird
+
+        # 假设您有一个方法用于加载并显示图片
+        # self.load_and_display_preview_image()
+
+        # 绑定下拉菜单的选择事件，当选择改变时调用您的load_and_display_image方法
+        # self.comboModel.bind('<<ComboboxSelected>>', self.load_and_display_preview_image())
+
         # 创建一个尺寸调整控件的Frame，并将其放置在底部Frame的第0行第0列
         self.frameResize = ttk.Frame(self.frameBasicConfigBottom)
         self.frameResize.grid(row=0, column=0, sticky=tk.NSEW)
@@ -251,39 +265,39 @@ class REGUIApp(ttk.Frame):  # 创建一个基于ttk.Frame的类
         # 将使用TTA模式的复选框放置在高级配置右侧Frame中
         self.checkUseTTA.pack(padx=10, pady=5, fill=tk.X)
 
-        # 创建关于页面的Frame，并将其放置在Notebook的第0行第0列
-        self.frameAbout = ttk.Frame(self.notebookConfig, padding=5)
-        self.frameAbout.grid(row=0, column=0, padx=5, pady=5, sticky=tk.NSEW)
-
-        # 设置关于页面的内容，包括图标、应用程序名称和构建信息
-        self.frameAboutContent = ttk.Frame(self.frameAbout)
-        self.frameAboutContent.place(relx=.5, rely=.5, anchor=tk.CENTER)  # 将Frame放置在父容器的中心
-
-        # 设置字体大小
-        f = ttk.Label().cget('font').string.split(' ')
-        f[-1] = '16'
-        f = ' '.join(f)
-
-        # 将应用程序图标添加到关于页面
-        self.imageIcon = ImageTk.PhotoImage(Image.open(os.path.join(BASE_PATH, 'icon-128px.webp')))
-        ttk.Label(self.frameAboutContent, image=self.imageIcon).pack(padx=10, pady=10)
-
-        # 添加应用程序名称到关于页面
-        ttk.Label(self.frameAboutContent, text='Real-ESRGAN GUI', font=f, justify=tk.CENTER).pack()
-        ttk.Label(self.frameAboutContent, text='By TransparentLC' + (time.strftime("\nBuilt at %Y-%m-%d %H:%M:%S", time.localtime(BUILD_TIME)) if BUILD_TIME else ""), justify=tk.CENTER).pack()
-        self.frameAboutBottom = ttk.Frame(self.frameAboutContent)
-        self.frameAboutBottom.pack()
-
-        # 创建查看源代码的按钮，并将其放置在关于页面底部的Frame中
-        ttk.Button(self.frameAboutBottom, text='查看源代码', command=lambda: webbrowser.open_new_tab('https://github.com/TransparentLC/realesrgan-gui')).grid(row=0, column=0, padx=5, pady=5, sticky=tk.NSEW)
-
-        # 创建查看Real-ESRGAN介绍的按钮，并将其放置在关于页面底部的Frame中
-        ttk.Button(self.frameAboutBottom, text='查看 Real-ESRGAN 介绍', command=lambda: webbrowser.open_new_tab('https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan')).grid(row=0, column=1, padx=5, pady=5, sticky=tk.NSEW)
+        # # 创建关于页面的Frame，并将其放置在Notebook的第0行第0列
+        # self.frameAbout = ttk.Frame(self.notebookConfig, padding=5)
+        # self.frameAbout.grid(row=0, column=0, padx=5, pady=5, sticky=tk.NSEW)
+        #
+        # # 设置关于页面的内容，包括图标、应用程序名称和构建信息
+        # self.frameAboutContent = ttk.Frame(self.frameAbout)
+        # self.frameAboutContent.place(relx=.5, rely=.5, anchor=tk.CENTER)  # 将Frame放置在父容器的中心
+        #
+        # # 设置字体大小
+        # f = ttk.Label().cget('font').string.split(' ')
+        # f[-1] = '16'
+        # f = ' '.join(f)
+        #
+        # # 将应用程序图标添加到关于页面
+        # self.imageIcon = ImageTk.PhotoImage(Image.open(os.path.join(BASE_PATH, 'icon-128px.webp')))
+        # ttk.Label(self.frameAboutContent, image=self.imageIcon).pack(padx=10, pady=10)
+        #
+        # # 添加应用程序名称到关于页面
+        # ttk.Label(self.frameAboutContent, text='Real-ESRGAN GUI', font=f, justify=tk.CENTER).pack()
+        # ttk.Label(self.frameAboutContent, text='By TransparentLC' + (time.strftime("\nBuilt at %Y-%m-%d %H:%M:%S", time.localtime(BUILD_TIME)) if BUILD_TIME else ""), justify=tk.CENTER).pack()
+        # self.frameAboutBottom = ttk.Frame(self.frameAboutContent)
+        # self.frameAboutBottom.pack()
+        #
+        # # 创建查看源代码的按钮，并将其放置在关于页面底部的Frame中
+        # # ttk.Button(self.frameAboutBottom, text='查看源代码', command=lambda: webbrowser.open_new_tab('https://github.com/TransparentLC/realesrgan-gui')).grid(row=0, column=0, padx=5, pady=5, sticky=tk.NSEW)
+        #
+        # # 创建查看Real-ESRGAN介绍的按钮，并将其放置在关于页面底部的Frame中
+        # ttk.Button(self.frameAboutBottom, text='查看 Real-ESRGAN 介绍', command=lambda: webbrowser.open_new_tab('https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan')).grid(row=0, column=1, padx=5, pady=5, sticky=tk.NSEW)
 
         # 将基本设定、高级设定和关于页面添加到Notebook控件
-        self.notebookConfig.add(self.frameBasicConfig, text='基本设定')
-        self.notebookConfig.add(self.frameAdvancedConfig, text='高级设定')
-        self.notebookConfig.add(self.frameAbout, text='关于')
+        self.notebookConfig.add(self.frameBasicConfig, text='基本设置')
+        self.notebookConfig.add(self.frameAdvancedConfig, text='高级设置')
+        # self.notebookConfig.add(self.frameAbout, text='关于')
 
         # 创建一个滚动文本框，用于显示处理过程的输出信息
         self.textOutput = ScrolledText(self)
@@ -291,6 +305,64 @@ class REGUIApp(ttk.Frame):  # 创建一个基于ttk.Frame的类
         # 初始时禁用文本框，防止用户编辑
         self.textOutput.configure(state=tk.DISABLED)
 
+    # 预览图片加载和显示方法
+    def load_and_display_preview_image(self, p:str):
+        # # 清除Frame中的旧图片
+        # for widget in self.imageDisplayFrame.winfo_children():
+        #     widget.destroy()
+        # 根据当前选择的模型加载新的图片
+        # 这里只是一个示例，您需要根据实际情况来加载图片
+        # current_model = self.varstrModel.get()
+
+        # 使用Pillow加载图片
+        pil_image = Image.open(p)
+        # 获取原始图片的尺寸
+        original_width, original_height = pil_image.size
+
+        # 计算等比例缩放的尺寸，高度不超过300像素
+        aspect_ratio = original_width / original_height
+        if original_height > 300:
+            resized_height = 300
+            resized_width = int(300 * aspect_ratio)
+        else:
+            resized_height = original_height
+            resized_width = original_width
+
+        # 调整图片尺寸
+        pil_image = pil_image.resize((resized_width, resized_height))
+
+        # 将Pillow图像转换为Tkinter的PhotoImage        后者只能支持png图片
+        tk_image = ImageTk.PhotoImage(pil_image)
+
+        # 更新self.imageDisplayFrame的大小以适应图片
+        self.imageDisplayFrame.config(width=resized_width, height=resized_height)
+
+        # 创建一个新的Label并将其打包到imageDisplayFrame中
+        #ttk.Label(self.imageDisplayFrame, image=tk_image).pack(side=tk.TOP, fill=tk.BOTH, expand=True)    #这行单独出现时不显示，和下面类似代码出现时却重复显示图片，猜测不显示是因为tk_image是局部变量，函数执行完就销毁了
+
+        # 更新窗口大小以适应图片Frame的新尺寸
+        self.update_window_size()
+
+        self.image = tk_image   #可能是局部变量问题
+        # ttk.Label(self.imageDisplayFrame, image=self.image).pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        ttk.Label(self.imageDisplayFrame, image=self.image).pack(side=tk.TOP, fill=tk.BOTH, expand=True)      #踏马的到底是什么问题突然显示又突然不显示,大概率是要在update_win 后面执行
+
+        #其实不显示图片的原因大概率是解释器还没来得及加载新代码(py没有编译器)
+
+    def update_window_size(self):
+        # 获取self.imageDisplayFrame的当前宽度和高度
+        width = self.imageDisplayFrame.cget('width')
+        height = self.imageDisplayFrame.cget('height')
+
+        # 确保文本框至少有250像素的高度
+        minimum_height = max(250, height)
+
+        # 设置窗口的最小尺寸
+        root.minsize(width, minimum_height)
+
+        # 更新窗口大小
+        root.geometry(f'{720+width}x{540+minimum_height}')
     # 当用户点击按钮选择输入路径时调用此函数
     def buttonInputPath_click(self):
         # 弹出文件选择对话框，只显示图片文件类型
@@ -302,6 +374,7 @@ class REGUIApp(ttk.Frame):  # 创建一个基于ttk.Frame的类
             return
         # 用户选择了文件，将其路径设置为输入路径
         self.setInputPath(p)
+        self.load_and_display_preview_image(p)
 
     # 当用户点击按钮选择输出路径时调用此函数
     def buttonOutputPath_click(self):
